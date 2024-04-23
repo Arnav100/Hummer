@@ -125,4 +125,4 @@ venv.bak/
 dmypy.json
 
 # Ignore audio to avoid having github be so slow
-audio/
+data/

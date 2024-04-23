@@ -3,13 +3,45 @@ from data.transforms import AudioUtil
 import matplotlib.pyplot as plt
 from pydub import AudioSegment 
 from pydub.utils import make_chunks
+import numpy as np
 import os
+from PIL import Image
 
-# aud = AudioUtil.open("output2.wav")
-# spect = AudioUtil.spectro_gram(aud)
-# plt.imshow(  spect.permute(1, 2, 0))
-# plt.title("Output 2") 
+
+# cmap = plt.get_cmap()
+# vals = np.zeros((11, 3))
+# vals[:, 0] = np.linspace(0, 1, num=11)
+# vals[:, 1] = np.linspace(0, 1, num=11)*0.4+0.2
+# vals[:, 2] = np.linspace(0, 1, num=11)*0.8
+
+# print(vals)
+# test = (cmap.__call__(vals) *255).astype(np.uint8)[:, :, :3]
+# print(test)
+
+# Image.fromarray(test, "RGB").save("small.jpg")
+# plt.imshow(test)
 # plt.show()
+
+aud = AudioUtil.open("testing/output2.wav")
+spect = AudioUtil.spectro_gram(aud)
+img = AudioUtil.convert_to_image(spect)
+# print(img.shape)
+# print(img)
+# print(spect.shape)
+# spect = spect.permute(1, 2, 0)
+# spect = spect.squeeze()
+
+# # b = (spect - np.min(spect))/np.ptp(spect)
+# b = AudioUtil.convert_to_image(spect)
+# print(b)
+# plt.imshow( b )
+# plt.title("Custom lin norm") 
+# plt.show()
+
+Image.fromarray(img, "RGB").save("testing.jpg")
+plt.imshow(img)
+plt.title("original")
+plt.show()
 
 
 def split_into_chunk(filename, src, secs=15):
@@ -28,6 +60,6 @@ def split_into_chunk(filename, src, secs=15):
             
         chunk.export(chunk_name, format="wav")
 
-wav_path = "audio/originals/wav/"
-for filename in os.listdir(wav_path):
-    split_into_chunk(filename, wav_path)
+# wav_path = "audio/originals/wav/"
+# for filename in os.listdir(wav_path):
+#     split_into_chunk(filename, wav_path)

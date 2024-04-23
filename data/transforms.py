@@ -6,6 +6,8 @@ from IPython.display import Audio
 from torch.utils.data import random_split
 from torch.utils.data import DataLoader, Dataset, random_split
 import torchaudio
+import matplotlib.pyplot as plt
+import numpy as np
 
 class AudioUtil():
   # ----------------------------
@@ -109,6 +111,15 @@ class AudioUtil():
     spec = transforms.AmplitudeToDB(top_db=top_db)(spec)
     return (spec)
   
+  def convert_to_image(spect):
+    spect = spect.permute(1, 2, 0)
+    spect = spect.squeeze()
+    minimum = torch.min(spect)
+    maximum = torch.max(spect)
+
+    spect = (spect - minimum) / (maximum - minimum)
+    cmap = plt.get_cmap()
+    return (cmap.__call__(spect)[:, :, :3] * 255).astype(np.uint8)
    # ----------------------------
   # Augment the Spectrogram by masking out some sections of it in both the frequency
   # dimension (ie. horizontal bars) and the time dimension (vertical bars) to prevent
@@ -176,14 +187,14 @@ class SoundDS(Dataset):
     return aug_sgram, class_id
   
 
-myds = SoundDS(df, data_path)
+# myds = SoundDS(df, data_path)
 
-# Random split of 80:20 between training and validation
-num_items = len(myds)
-num_train = round(num_items * 0.8)
-num_val = num_items - num_train
-train_ds, val_ds = random_split(myds, [num_train, num_val])
+# # Random split of 80:20 between training and validation
+# num_items = len(myds)
+# num_train = round(num_items * 0.8)
+# num_val = num_items - num_train
+# train_ds, val_ds = random_split(myds, [num_train, num_val])
 
-# Create training and validation data loaders
-train_dl = torch.utils.data.DataLoader(train_ds, batch_size=16, shuffle=True)
-val_dl = torch.utils.data.DataLoader(val_ds, batch_size=16, shuffle=False)
+# # Create training and validation data loaders
+# train_dl = torch.utils.data.DataLoader(train_ds, batch_size=16, shuffle=True)
+# val_dl = torch.utils.data.DataLoader(val_ds, batch_size=16, shuffle=False)
