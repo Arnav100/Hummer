@@ -52,13 +52,9 @@ def convert_to_spectograms():
         for audio in os.listdir(audio_path + folder):
             aud = AudioUtil.open(audio_path + folder + audio)
             spect = AudioUtil.spectro_gram(aud)
-            print(spect.shape)
-            print(specto_path + folder + audio[:-4] + ".jpg")
             img = AudioUtil.convert_to_image(spect)
-            # save_image(spect, specto_path + folder + audio[:-4] + ".jpg")
             Image.fromarray(img, 'RGB').save(specto_path + folder + audio[:-4] + ".jpg")
 
-            break
 
 
           
