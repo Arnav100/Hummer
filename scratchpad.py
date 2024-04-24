@@ -23,11 +23,20 @@ from PIL import Image
 # plt.show()
 
 aud = AudioUtil.open("testing/output2.wav")
-spect = AudioUtil.spectro_gram(aud)
-img = AudioUtil.convert_to_image(spect)
+aud = AudioUtil.rechannel(aud, 2)
+original = AudioUtil.spectro_gram(aud)
+
+# img = AudioUtil.convert_to_image(spect)
 # print(img.shape)
 # print(img)
 # print(spect.shape)
+
+plt.figure()
+f, axarr = plt.subplots(2,1) 
+axarr[0].imshow(original)
+# axarr[0].title("original")
+
+spect = AudioUtil.spectro_augment(original)
 # spect = spect.permute(1, 2, 0)
 # spect = spect.squeeze()
 
@@ -38,9 +47,10 @@ img = AudioUtil.convert_to_image(spect)
 # plt.title("Custom lin norm") 
 # plt.show()
 
-Image.fromarray(img, "RGB").save("testing.jpg")
-plt.imshow(img)
-plt.title("original")
+# Image.fromarray(img, "RGB").save("testing.jpg")
+
+axarr[1].imshow(spect)
+# axarr[1].title("augmented")
 plt.show()
 
 
