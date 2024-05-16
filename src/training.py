@@ -9,7 +9,7 @@ def get_data():
     ds = SpectogramDS(get_data_df())
 
     num_items = len(ds)
-    train_len = round(num_items * 0.75)
+    train_len = round(num_items * 0.70)
     validate_len = num_items - train_len
     train_ds, val_ds = random_split(ds, [train_len, validate_len])
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     train_data, val_data = get_data()
     model = Net()
 
-    train(model, train_data)
+    train(model, train_data, 20)
     path = "../models/test3.pth"
     torch.save(model.state_dict(), path)
     test(model, val_data)

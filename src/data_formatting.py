@@ -17,7 +17,9 @@ song_to_class = {"gasoline": 1, "love_me" : 2,
                  "here_we_go_again": 5, "less_than_zero": 6, 
                  "out_of_time": 7, "sacrifice": 8, 
                  "someone_else": 9, "starry_eyes": 10, 
-                 "take_my_breath": 11, "married": 12, "phantom_regret": 0}
+                 "take_my_breath": 11, "married": 0,}
+
+class_to_song = {v: k for k, v in song_to_class.items()}
 
 def convert_to_wav(no_repeats=False):
     for audio in os.listdir(m4a_loc):
@@ -52,7 +54,8 @@ def split_into_chunk(filename, secs=10, no_repeats=False):
         print ("exporting", chunk_name) 
 
         if len(chunk) < length:
-            chunk = chunk + AudioSegment.silent(duration=length - len(chunk))
+            continue
+            # chunk = chunk + AudioSegment.silent(duration=length - len(chunk))
             
         chunk.export(chunk_name, format="wav")
 
