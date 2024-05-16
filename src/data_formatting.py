@@ -3,7 +3,6 @@ from pydub.utils import make_chunks
 from transforms import AudioUtil
 from PIL import Image
 import pandas as pd
-from torchvision.utils import save_image
 import os
 
 
@@ -18,7 +17,7 @@ song_to_class = {"gasoline": 1, "love_me" : 2,
                  "here_we_go_again": 5, "less_than_zero": 6, 
                  "out_of_time": 7, "sacrifice": 8, 
                  "someone_else": 9, "starry_eyes": 10, 
-                 "take_my_breath": 11, "married": 12}
+                 "take_my_breath": 11, "married": 12, "phantom_regret": 0}
 
 def convert_to_wav(no_repeats=False):
     for audio in os.listdir(m4a_loc):

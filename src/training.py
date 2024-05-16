@@ -1,7 +1,7 @@
 from torch.utils.data import random_split
 import torch
 from dataset import SpectogramDS
-from src.data_formatting import get_data_df
+from data_formatting import get_data_df
 from model import Net
 
 
@@ -88,6 +88,6 @@ if __name__ == "__main__":
     model = Net()
 
     train(model, train_data)
-    path = "../models/test2.pth"
+    path = "../models/test3.pth"
     torch.save(model.state_dict(), path)
     test(model, val_data)
