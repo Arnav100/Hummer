@@ -1,7 +1,7 @@
 from torch.utils.data import random_split
 import torch
 from dataset import SpectogramDS
-from data_formating import get_data_df
+from src.data_formatting import get_data_df
 from model import Net
 
 

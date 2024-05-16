@@ -18,24 +18,31 @@ song_to_class = {"gasoline": 1, "love_me" : 2,
                  "here_we_go_again": 5, "less_than_zero": 6, 
                  "out_of_time": 7, "sacrifice": 8, 
                  "someone_else": 9, "starry_eyes": 10, 
-                 "take_my_breath": 11}
+                 "take_my_breath": 11, "married": 12}
 
-def convert_to_wav():
+def convert_to_wav(no_repeats=False):
     for audio in os.listdir(m4a_loc):
         if ".m4a" not in audio:
             continue
+        wav_name = audio[:-4] + ".wav"
+        if no_repeats and wav_name in os.listdir(wav_loc):
+            continue
         print(audio)
         mp3_file = AudioSegment.from_file(m4a_loc + audio)
-        wav_name = audio[:-4] + ".wav"
         mp3_file.export(wav_loc + wav_name, format="wav")
 
 
-def split_into_chunk(filename, secs=10):
+def split_into_chunk(filename, secs=10, no_repeats=False):
     folder = audio_path + filename.split("-")[0].lower() 
     name = filename[:-4]
     print("Folder: " + folder)
     if not os.path.exists(folder):
         os.mkdir( folder)
+
+    if no_repeats:
+        for audio_name in os.listdir(folder):
+            if name in audio_name:
+                return
 
     song = AudioSegment.from_wav(wav_loc + filename)
     length = secs * 1000
@@ -51,7 +58,7 @@ def split_into_chunk(filename, secs=10):
         chunk.export(chunk_name, format="wav")
 
 
-def convert_to_spectograms():
+def convert_folder_to_spectograms(no_repeats=False):
     for folder in os.listdir(audio_path):
         if folder == "originals" or not os.path.isdir(audio_path + folder):
             continue
@@ -61,12 +68,19 @@ def convert_to_spectograms():
         
         folder = folder + "/"
         for audio in os.listdir(audio_path + folder):
-            aud = AudioUtil.open(audio_path + folder + audio)
-            spect = AudioUtil.spectro_gram(aud)
-            img = AudioUtil.convert_to_image(spect)
-            Image.fromarray(img, 'RGB').save(specto_path + folder + audio[:-4] + ".jpg")
+            img_name = specto_path + folder + audio[:-4] + ".jpg"
+            
+            if no_repeats and os.path.isfile(img_name):
+                continue
+
+            img = convert_to_spectogram(audio_path + folder + audio)
+            Image.fromarray(img, 'RGB').save(img_name)
 
 
+def convert_to_spectogram(audio_file_path):
+    aud = AudioUtil.open(audio_file_path)
+    spect = AudioUtil.spectro_gram(aud)
+    return AudioUtil.convert_to_image(spect)
 
           
 def get_data_df():
@@ -79,7 +93,8 @@ def get_data_df():
     return pd.DataFrame(data)
 
 if __name__ == "__main__":
-    convert_to_wav()
+    no_repeats=True
+    convert_to_wav(no_repeats=no_repeats)
     for filename in os.listdir(wav_loc):
-        split_into_chunk(filename)
-    convert_to_spectograms()
+        split_into_chunk(filename, no_repeats=no_repeats)
+    convert_folder_to_spectograms(no_repeats=no_repeats)
