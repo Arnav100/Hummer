@@ -126,3 +126,4 @@ dmypy.json
 
 # Ignore audio to avoid having github be so slow
 data/
+*.wav
