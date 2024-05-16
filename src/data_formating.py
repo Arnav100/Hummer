@@ -13,10 +13,17 @@ specto_path = "../data/spectograms/"
 m4a_loc = audio_path + "originals/m4a/"
 wav_loc = audio_path + "originals/wav/"
 
-song_to_class = {"gasoline": 1, "love_me" : 2}
+song_to_class = {"gasoline": 1, "love_me" : 2, 
+                 "best_friends": 3, "dont_break_my_heart": 4,
+                 "here_we_go_again": 5, "less_than_zero": 6, 
+                 "out_of_time": 7, "sacrifice": 8, 
+                 "someone_else": 9, "starry_eyes": 10, 
+                 "take_my_breath": 11}
 
 def convert_to_wav():
     for audio in os.listdir(m4a_loc):
+        if ".m4a" not in audio:
+            continue
         print(audio)
         mp3_file = AudioSegment.from_file(m4a_loc + audio)
         wav_name = audio[:-4] + ".wav"
@@ -27,11 +34,15 @@ def split_into_chunk(filename, secs=10):
     folder = audio_path + filename.split("-")[0].lower() 
     name = filename[:-4]
     print("Folder: " + folder)
+    if not os.path.exists(folder):
+        os.mkdir( folder)
+
     song = AudioSegment.from_wav(wav_loc + filename)
     length = secs * 1000
     chunks = make_chunks(song,length)  
+
     for i, chunk in enumerate(chunks): 
-        chunk_name = './' +folder+ '/' + name + "_{0}.wav".format(i) 
+        chunk_name = folder+ '/' + name + "_{0}.wav".format(i) 
         print ("exporting", chunk_name) 
 
         if len(chunk) < length:
@@ -68,7 +79,7 @@ def get_data_df():
     return pd.DataFrame(data)
 
 if __name__ == "__main__":
-    # convert_to_wav()
-    # for filename in os.listdir(wav_loc):
-    #     split_into_chunk(filename)
+    convert_to_wav()
+    for filename in os.listdir(wav_loc):
+        split_into_chunk(filename)
     convert_to_spectograms()
