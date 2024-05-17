@@ -2,7 +2,7 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
 import torch
-from machine_learning.model import Net
+from backend.model import Net
 from data_formatting import convert_to_spectogram, class_to_song
 from time import sleep
 
@@ -21,8 +21,6 @@ def record_audio(save_file="recording.wav"):
     print("Go!")
     recording = sd.rec(int(duration * freq), 
                        samplerate=freq, channels=min(input_channels, 2))
-
-
     sd.wait()
     wv.write(save_file, recording, freq, sampwidth=2)
 
