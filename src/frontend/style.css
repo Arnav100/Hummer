@@ -23,7 +23,7 @@ h1 {
 }
 
 
-#countdownTimer {
+.timer {
     font-size: 35px;
     text-align: center;
 }
