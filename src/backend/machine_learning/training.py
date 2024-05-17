@@ -23,7 +23,7 @@ def get_data():
 def train(model, train_data, epochs=10):
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(),lr=0.001)
-    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.001,
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01,
                                                     steps_per_epoch=int(len(train_data)),
                                                     epochs=epochs,
                                                     anneal_strategy='linear')
@@ -69,6 +69,7 @@ def train(model, train_data, epochs=10):
 def test(model, val_data):
     correct = 0
     total = 0
+    model.eval()
     # since we're not training, we don't need to calculate the gradients for our outputs
     with torch.no_grad():
         for data in val_data:
@@ -88,6 +89,6 @@ if __name__ == "__main__":
     model = Net()
 
     train(model, train_data, 20)
-    path = "../models/test3.pth"
+    path = "../../../models/test4.pth"
     torch.save(model.state_dict(), path)
     test(model, val_data)

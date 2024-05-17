@@ -1,13 +1,13 @@
 from pydub import AudioSegment
 from pydub.utils import make_chunks
-from transforms import AudioUtil
+from transforms import Converter
 from PIL import Image
 import pandas as pd
 import os
 
 
-audio_path = "../data/audio/"
-specto_path = "../data/spectograms/"
+audio_path = "../../data/audio/"
+specto_path = "../../data/spectograms/"
 
 m4a_loc = audio_path + "originals/m4a/"
 wav_loc = audio_path + "originals/wav/"
@@ -80,9 +80,9 @@ def convert_folder_to_spectograms(no_repeats=False):
 
 
 def convert_to_spectogram(audio_file_path):
-    aud = AudioUtil.open(audio_file_path)
-    spect = AudioUtil.spectro_gram(aud)
-    return AudioUtil.convert_to_image(spect)
+    aud = Converter.open(audio_file_path)
+    spect = Converter.spectro_gram(aud)
+    return Converter.convert_to_color_image(spect)
 
           
 def get_data_df():

@@ -2,7 +2,7 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
 import torch
-from model import Net
+from machine_learning.model import Net
 from data_formatting import convert_to_spectogram, class_to_song
 from time import sleep
 
@@ -12,9 +12,6 @@ def record_audio(save_file="recording.wav"):
     input_channels = device_info['max_input_channels']
     freq = 44100
     duration = 10
-    recording = sd.rec(int(duration * freq), 
-                       samplerate=freq, channels=min(input_channels, 2))
-
     print("Begin Humming Now in 3...")
     sleep(1)
     print("2...")
@@ -22,8 +19,12 @@ def record_audio(save_file="recording.wav"):
     print("1...")
     sleep(1)
     print("Go!")
+    recording = sd.rec(int(duration * freq), 
+                       samplerate=freq, channels=min(input_channels, 2))
+
+
     sd.wait()
-    wv.write("recording.wav", recording, freq, sampwidth=2)
+    wv.write(save_file, recording, freq, sampwidth=2)
 
 def load_model(path):
     print("loading model")
@@ -41,9 +42,14 @@ def run_model(net, save_file="recording.wav"):
     _, predicted = torch.max(outputs.data, 1)
     print(predicted)
     print(class_to_song[predicted.item()])
+    return class_to_song[predicted.item()]
+
+def get_name_of_song(save_file="recording.wav"):
+    path = "../../models/test4.pth"
+    net = load_model(path)
+    song_name = run_model(net, save_file)
+    return song_name
 
 if __name__ == "__main__":
-    path = "../models/test3.pth"
-    net = load_model(path)
     record_audio()
-    run_model(net)
+    get_name_of_song()
