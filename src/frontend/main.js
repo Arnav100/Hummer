@@ -1,5 +1,6 @@
 const startRecordingButton = document.getElementById('startRecording');
 // const stopRecordingButton = document.getElementById('stopRecording');
+const retryButton = document.getElementById('retry')
 const audioPlayer = document.getElementById('audioPlayer');
 const countdownTimer = document.getElementById('countdownTimer');
 const songName = document.getElementById("songName")
@@ -9,7 +10,22 @@ let countdownInterval;
 const RECORDING_TIME = 10; // in seconds
 
 startRecordingButton.addEventListener('click', startRecording);
+retryButton.addEventListener('click', retry);
+
 // stopRecordingButton.addEventListener('click', stopRecording);
+
+function retry() {
+    fetch('/retry', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            song_name = data["song_name"]
+            songName.innerText = song_name
+        })
+
+}
 
 function startRecording() {
     navigator.mediaDevices.getUserMedia({ audio: true })

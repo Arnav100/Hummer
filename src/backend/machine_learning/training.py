@@ -89,6 +89,6 @@ if __name__ == "__main__":
     model = Net()
 
     train(model, train_data, 20)
-    path = "../../../models/test4.pth"
+    path = "../../../models/smaller1.pth"
     torch.save(model.state_dict(), path)
     test(model, val_data)

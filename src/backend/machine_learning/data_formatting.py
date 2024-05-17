@@ -1,13 +1,13 @@
 from pydub import AudioSegment
 from pydub.utils import make_chunks
-from transforms import Converter
+from machine_learning.transforms import Converter
 from PIL import Image
 import pandas as pd
 import os
 
 
-audio_path = "../../data/audio/"
-specto_path = "../../data/spectograms/"
+audio_path = "../../../data/audio/"
+specto_path = "../../../data/spectograms/"
 
 m4a_loc = audio_path + "originals/m4a/"
 wav_loc = audio_path + "originals/wav/"

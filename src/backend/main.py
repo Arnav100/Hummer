@@ -3,7 +3,7 @@ from scipy.io.wavfile import write
 import wavio as wv
 import torch
 from machine_learning.model import Net
-from data_formatting import convert_to_spectogram, class_to_song
+from machine_learning.data_formatting import convert_to_spectogram, class_to_song
 from time import sleep
 
 
@@ -45,7 +45,7 @@ def run_model(net, save_file="recording.wav"):
     return class_to_song[predicted.item()]
 
 def get_name_of_song(save_file="recording.wav"):
-    path = "../../models/test4.pth"
+    path = "../../models/smaller1.pth"
     net = load_model(path)
     song_name = run_model(net, save_file)
     return song_name
