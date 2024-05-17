@@ -20,9 +20,9 @@ def get_data():
     return train_data, val_data
 
 
-def train(model, train_data, epochs=10):
+def train(model, train_data, epochs=10, lr = 0.001):
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(),lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(),lr=lr)
     scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01,
                                                     steps_per_epoch=int(len(train_data)),
                                                     epochs=epochs,
@@ -82,6 +82,7 @@ def test(model, val_data):
             correct += (predicted == labels).sum().item()
 
     print(f'Accuracy of the network on test images: {100 * correct // total} %')
+    return 100 * correct // total
 
 
 if __name__ == "__main__":
