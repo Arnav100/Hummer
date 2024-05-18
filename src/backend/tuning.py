@@ -13,6 +13,8 @@ def tune_lr():
   print(lr_choices)
   print("The optimal learning rate is " + str(max(lr_choices, key = lambda x: lr_choices[x])))
 
+
 if __name__ == "__main__":
     tune_lr()
+    #tune_epochs()
 
