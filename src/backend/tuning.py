@@ -10,7 +10,8 @@ def tune_lr():
     training.train(model, train_data, epochs = 20, lr = c)
     result = training.test(model, val_data)
     lr_choices[c] = result
-  return "The optimal learning rate is " + str(max(lr_choices, key = lambda x: lr_choices[x]))
+  print(lr_choices)
+  print("The optimal learning rate is " + str(max(lr_choices, key = lambda x: lr_choices[x])))
 
 if __name__ == "__main__":
     tune_lr()
