@@ -12,12 +12,14 @@ specto_path = "../../data/spectograms/"
 m4a_loc = audio_path + "originals/m4a/"
 wav_loc = audio_path + "originals/wav/"
 
-song_to_class = {"gasoline": 1, "love_me" : 2, 
+song_to_class = {"married": 0, "gasoline": 1, "love_me" : 2, 
                  "best_friends": 3, "dont_break_my_heart": 4,
                  "here_we_go_again": 5, "less_than_zero": 6, 
                  "out_of_time": 7, "sacrifice": 8, 
                  "someone_else": 9, "starry_eyes": 10, 
-                 "take_my_breath": 11, "married": 0,}
+                 "take_my_breath": 11, "i_feel_it_coming": 12, 
+                  "save_your_tears": 13, "starboy": 14, 
+                   "die_for_you": 15, "blinding_lights": 16 }
 
 class_to_song = {v: k for k, v in song_to_class.items()}
 
@@ -45,7 +47,7 @@ def split_into_chunk(filename, secs=10, no_repeats=False):
             if name in audio_name:
                 return
 
-    song = AudioSegment.from_wav(wav_loc + filename)
+    song = AudioSegment.from_file(wav_loc + filename)
     length = secs * 1000
     chunks = make_chunks(song,length)  
 
@@ -54,8 +56,7 @@ def split_into_chunk(filename, secs=10, no_repeats=False):
         print ("exporting", chunk_name) 
 
         if len(chunk) < length:
-            continue
-            # chunk = chunk + AudioSegment.silent(duration=length - len(chunk))
+            chunk = chunk + AudioSegment.silent(duration=length - len(chunk))
             
         chunk.export(chunk_name, format="wav")
 
@@ -76,6 +77,7 @@ def convert_folder_to_spectograms(no_repeats=False):
                 continue
 
             img = convert_to_spectogram(audio_path + folder + audio)
+            print("Image: " + img_name)
             Image.fromarray(img, 'RGB').save(img_name)
 
 
@@ -89,10 +91,12 @@ def get_data_df():
     data = {"path": [], "song": []}
     for song in os.listdir(specto_path):
         for spect in os.listdir(specto_path + "/" + song):
-            data["path"].append(specto_path + "/" + song + "/" + spect)
+            data["path"].append(specto_path  + song + "/" + spect)
             data["song"].append(song_to_class[song])
     
-    return pd.DataFrame(data)
+    dataset = pd.DataFrame(data)
+    dataset.to_csv("dataset.csv")
+    return dataset
 
 if __name__ == "__main__":
     no_repeats=True

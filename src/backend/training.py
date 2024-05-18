@@ -3,7 +3,7 @@ import torch
 from dataset import SpectogramDS
 from data_formatting import get_data_df
 from model import Net
-
+from math import sqrt
 
 def get_data():
     ds = SpectogramDS(get_data_df())
@@ -13,7 +13,6 @@ def get_data():
     validate_len = num_items - train_len
     train_ds, val_ds = random_split(ds, [train_len, validate_len])
 
-    # Create training and validation data loaders
     train_data = torch.utils.data.DataLoader(train_ds, batch_size=16, shuffle=True)
     val_data = torch.utils.data.DataLoader(val_ds, batch_size=16, shuffle=False)
 
@@ -23,7 +22,7 @@ def get_data():
 def train(model, train_data, epochs=10, lr = 0.001):
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(),lr=lr)
-    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01,
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=sqrt(lr),
                                                     steps_per_epoch=int(len(train_data)),
                                                     epochs=epochs,
                                                     anneal_strategy='linear')
@@ -87,9 +86,9 @@ def test(model, val_data):
 
 if __name__ == "__main__":
     train_data, val_data = get_data()
-    model = Net()
+    # model = Net()
 
-    train(model, train_data, 20)
-    path = "../../../models/smaller1.pth"
-    torch.save(model.state_dict(), path)
-    test(model, val_data)
+    # train(model, train_data, 20)
+    # path = "../../models/full2.pth"
+    # torch.save(model.state_dict(), path)
+    # test(model, val_data)

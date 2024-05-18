@@ -1,6 +1,5 @@
 from torch.utils.data import Dataset
 from torchvision import transforms
-from torchvision.io import read_image
 from PIL import Image
 
 

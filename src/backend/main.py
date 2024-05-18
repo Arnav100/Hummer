@@ -5,6 +5,12 @@ import torch
 from model import Net
 from data_formatting import convert_to_spectogram, class_to_song
 from time import sleep
+from PIL import Image
+from pydub import AudioSegment
+from pydub.utils import make_chunks
+from torchvision import transforms
+
+
 
 
 def record_audio(save_file="recording.wav"):
@@ -34,7 +40,14 @@ def load_model(path):
 def run_model(net, save_file="recording.wav"):
     print("Converting image")
     img = convert_to_spectogram(save_file)
-    img = torch.from_numpy(img).float().permute(2, 1, 0).unsqueeze(0)
+    Image.fromarray(img, 'RGB').save("test.jpg")
+    img = Image.open("test.jpg")
+    transform = transforms.Compose( [
+        transforms.ToTensor(),
+        ])
+    img = transform(img)
+    img = img.unsqueeze(0)
+    print(img.shape)
     outputs = net(img)
     print(outputs)
     _, predicted = torch.max(outputs.data, 1)
@@ -42,8 +55,19 @@ def run_model(net, save_file="recording.wav"):
     print(class_to_song[predicted.item()])
     return class_to_song[predicted.item()]
 
+def trim_audio(file):
+    song = AudioSegment.from_file(file)
+    length = 10 * 1000
+    chunks = make_chunks(song,length)
+    chunk = chunks[0]
+    if len(chunk) < length:
+        chunk = chunk + AudioSegment.silent(duration=length - len(chunk))
+    chunk.export(file, format="wav")
+              
+
+
 def get_name_of_song(save_file="recording.wav"):
-    path = "../../models/smaller1.pth"
+    path = "../../models/full2.pth"
     net = load_model(path)
     song_name = run_model(net, save_file)
     return song_name
